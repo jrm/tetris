@@ -3,6 +3,7 @@
 require "curses"
 
 Curses.init_screen
+Curses.start_color
 
 SCREEN_WIDTH = 80
 SCREEN_HEIGHT = 30
@@ -17,44 +18,42 @@ FIELD = []
   end
 end
 
-TETRONIMO = Array.new(7) { Array.new }
+TETROMINO = Array.new(7) { Array.new }
 
-TETRONIMO[0] += "..X.".chars
-TETRONIMO[0] += "..X.".chars
-TETRONIMO[0] += "..X.".chars
-TETRONIMO[0] += "..X.".chars
+TETROMINO[0] += "..X.".chars
+TETROMINO[0] += "..X.".chars
+TETROMINO[0] += "..X.".chars
+TETROMINO[0] += "..X.".chars
 
-TETRONIMO[1] += "..X.".chars
-TETRONIMO[1] += ".XX.".chars
-TETRONIMO[1] += ".X..".chars
-TETRONIMO[1] += "....".chars
+TETROMINO[1] += "..X.".chars
+TETROMINO[1] += ".XX.".chars
+TETROMINO[1] += ".X..".chars
+TETROMINO[1] += "....".chars
 
-TETRONIMO[2] += ".X..".chars
-TETRONIMO[2] += ".XX.".chars
-TETRONIMO[2] += "..X.".chars
-TETRONIMO[2] += "..X.".chars
+TETROMINO[2] += ".X..".chars
+TETROMINO[2] += ".XX.".chars
+TETROMINO[2] += "..X.".chars
+TETROMINO[2] += "..X.".chars
 
-TETRONIMO[3] += "....".chars
-TETRONIMO[3] += ".XX.".chars
-TETRONIMO[3] += ".XX.".chars
-TETRONIMO[3] += "....".chars
+TETROMINO[3] += "....".chars
+TETROMINO[3] += ".XX.".chars
+TETROMINO[3] += ".XX.".chars
+TETROMINO[3] += "....".chars
 
-TETRONIMO[4] += "..X.".chars
-TETRONIMO[4] += ".XX.".chars
-TETRONIMO[4] += "..X.".chars
-TETRONIMO[4] += "....".chars
+TETROMINO[4] += "..X.".chars
+TETROMINO[4] += ".XX.".chars
+TETROMINO[4] += "..X.".chars
+TETROMINO[4] += "....".chars
 
-TETRONIMO[5] += "....".chars
-TETRONIMO[5] += ".XX.".chars
-TETRONIMO[5] += "..X.".chars
-TETRONIMO[5] += "..X.".chars
+TETROMINO[5] += "....".chars
+TETROMINO[5] += ".XX.".chars
+TETROMINO[5] += "..X.".chars
+TETROMINO[5] += "..X.".chars
 
-TETRONIMO[6] += ".XX.".chars
-TETRONIMO[6] += ".X..".chars
-TETRONIMO[6] += ".X..".chars
-TETRONIMO[6] += ".X..".chars
-
-
+TETROMINO[6] += ".XX.".chars
+TETROMINO[6] += ".X..".chars
+TETROMINO[6] += ".X..".chars
+TETROMINO[6] += ".X..".chars
 
 def rotate(x,y,r)
   case (r % 4)
@@ -78,7 +77,7 @@ def does_piece_fit(id, rotation, posx, posy)
       fi = (posy + y) * FIELD_WIDTH + (posx + x)
       if posx + x >= 0 && posx + x < FIELD_WIDTH
         if posy + y >= 0 && posy + y < FIELD_HEIGHT
-          return false if (TETRONIMO[id][pi] == 'X' && FIELD[fi] != 0)
+          return false if (TETROMINO[id][pi] == 'X' && FIELD[fi] != 0)
         end
       end
     end
@@ -134,7 +133,7 @@ begin
         # Lock Piece
         (0...4).each do |x|
           (0...4).each do |y|
-            if TETRONIMO[current_piece][rotate(x,y,current_rotation)] != '.'
+            if TETROMINO[current_piece][rotate(x,y,current_rotation)] != '.'
               FIELD[(current_y + y) * FIELD_WIDTH + (current_x + x)] = current_piece + 1
             end
           end
@@ -177,7 +176,7 @@ begin
     # Draw Piece
     (0...4).each do |x|
       (0...4).each do |y|
-        if TETRONIMO[current_piece][rotate(x,y,current_rotation)] == 'X'
+        if TETROMINO[current_piece][rotate(x,y,current_rotation)] == 'X'
           screen[(current_y + y + 2) * SCREEN_WIDTH + (current_x + x + 2)] = (current_piece + 65).chr
         end
       end
@@ -190,7 +189,6 @@ begin
 
     # Remove Lines
     if !lines.empty?
-      sleep(0.4)
       lines.each do |l|
         (1...FIELD_WIDTH - 1).each do |x|
           (l).downto(0) do |y|
